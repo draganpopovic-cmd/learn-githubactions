@@ -1,27 +1,19 @@
-name: 'Hello World Docker Action'
-description: 'A simple hello world action that runs in Docker'
-inputs:
-  name:
-    description: 'Name to greet'
-    required: false
-    default: 'World'
-  message:
-    description: 'Custom message to display'
-    required: false
-    default: 'Hello'
-outputs:
-  greeting:
-    description: 'The greeting message'
-    value: ${{ steps.hello.outputs.greeting }}
-runs:
-  using: 'docker'
-  image: 'docker://node:18-alpine'
-  entrypoint: 'sh'
-  args:
-    - '-c'
-    - |
-      MESSAGE="${INPUT_MESSAGE:-Hello}"
-      NAME="${INPUT_NAME:-World}"
-      GREETING="$MESSAGE, $NAME!"
-      echo "$GREETING"
-      echo "greeting=$GREETING" >> $GITHUB_OUTPUT
+name: Test Hello World Action
+
+on: [push]
+
+jobs:
+  hello:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Run hello world action
+        id: greeting
+        uses: ./hello-world-docker-action
+        with:
+          name: 'GitHub Actions'
+          message: 'Welcome to'
+      
+      - name: Display output
+        run: echo "Output: ${{ steps.greeting.outputs.greeting }}"
