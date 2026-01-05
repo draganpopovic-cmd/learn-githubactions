@@ -1,0 +1,21 @@
+name: 'Hello World Docker Action'
+description: 'A simple hello world action that runs in Docker'
+inputs:
+  name:
+    description: 'Name to greet'
+    required: false
+    default: 'World'
+  message:
+    description: 'Custom message to display'
+    required: false
+    default: 'Hello'
+outputs:
+  greeting:
+    description: 'The greeting message'
+    value: ${{ steps.hello.outputs.greeting }}
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  args:
+    - ${{ inputs.name }}
+    - ${{ inputs.message }}
