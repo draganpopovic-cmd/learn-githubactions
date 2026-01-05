@@ -1,8 +1,8 @@
 #!/bin/bash
 
-# Get input arguments
-NAME="${1:-World}"
-MESSAGE="${2:-Hello}"
+# Get input arguments from GitHub Actions
+NAME="${INPUT_NAME:-World}"
+MESSAGE="${INPUT_MESSAGE:-Hello}"
 
 # Create greeting
 GREETING="$MESSAGE, $NAME!"
