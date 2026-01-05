@@ -1,0 +1,48 @@
+name: Reusable Node.js Test Workflow
+
+on:
+  workflow_call:
+    inputs:
+      node-version:
+        description: 'Node.js version'
+        required: false
+        default: '18.x'
+        type: string
+      working-directory:
+        description: 'Working directory'
+        required: false
+        default: '.'
+        type: string
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup Node.js ${{ inputs.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ inputs.node-version }}
+        cache: 'npm'
+        cache-dependency-path: '${{ inputs.working-directory }}/package-lock.json'
+    
+    - name: Install dependencies
+      working-directory: ${{ inputs.working-directory }}
+      run: npm ci
+    
+    - name: Run tests
+      working-directory: ${{ inputs.working-directory }}
+      run: npm test
+    
+    - name: Generate coverage report
+      working-directory: ${{ inputs.working-directory }}
+      run: npm run coverage
+      continue-on-error: true
+    
+    - name: Upload coverage
+      uses: codecov/codecov-action@v3
+      with:
+        files: ./${{ inputs.working-directory }}/coverage/coverage-final.json
+        fail_ci_if_error: false
