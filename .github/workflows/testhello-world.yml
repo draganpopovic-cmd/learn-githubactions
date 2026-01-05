@@ -16,4 +16,7 @@ jobs:
           message: 'Welcome to'
       
       - name: Display output
-        run: echo "Output: ${{ steps.greeting.outputs.greeting }}"
+        if: success()
+        run: |
+          echo "Greeting Output: ${{ steps.greeting.outputs.greeting }}"
+          echo "Action completed successfully"
