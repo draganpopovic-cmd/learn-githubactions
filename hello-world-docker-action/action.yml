@@ -15,7 +15,8 @@ outputs:
     value: ${{ steps.hello.outputs.greeting }}
 runs:
   using: 'docker'
-  image: 'Dockerfile'
+  image: 'docker://alpine:latest'
+  entrypoint: 'sh'
   args:
-    - ${{ inputs.name }}
-    - ${{ inputs.message }}
+    - '-c'
+    - 'MESSAGE="${INPUT_MESSAGE:-Hello}"; NAME="${INPUT_NAME:-World}"; GREETING="$MESSAGE, $NAME!"; echo "$GREETING"; echo "greeting=$GREETING" >> $GITHUB_OUTPUT'
